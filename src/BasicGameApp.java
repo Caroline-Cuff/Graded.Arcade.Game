@@ -20,10 +20,20 @@ import javax.crypto.BadPaddingException;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.tools.Tool;
-
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
 
 //*******************************************************************************
 // Class Definition Section
+
+
+//todo: control paddles
+    /// right paddle
+    /// left paddle
+//todo: make ball bounce off of paddle
+    /// change dx - hitbox intersect
+// if ball goes off of y play game over screen
+
 
 public class BasicGameApp implements Runnable {
 
@@ -43,11 +53,13 @@ public class BasicGameApp implements Runnable {
     public BufferStrategy bufferStrategy;
     public Image backgroundpic;
     public Image paddlepic;
+    public Image ballpic;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
     private Paddles leftPaddle;
     private Paddles rightPaddle;
+    private Ball mainBall;
 
     // Main method definition
     // This is the code that runs first and automatically
@@ -69,8 +81,10 @@ public class BasicGameApp implements Runnable {
 
         backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
         paddlepic = Toolkit.getDefaultToolkit().getImage("paddle.png");
+        ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
         leftPaddle = new Paddles(12,12);
         rightPaddle = new Paddles(965,12);
+        mainBall = new Ball(500,350);
 
         render();
 
@@ -97,6 +111,9 @@ public class BasicGameApp implements Runnable {
         // creates a canvas which is a blank rectangular area of the screen onto which the application can draw
         // and trap input events (Mouse and Keyboard events)
         canvas = new Canvas();
+
+        canvas.addKeyListener(this);
+
         canvas.setBounds(0, 0, WIDTH, HEIGHT);
         canvas.setIgnoreRepaint(true);
 
@@ -124,10 +141,19 @@ public class BasicGameApp implements Runnable {
 
 
         //draw the image of the
-        g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
+     //   g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
         g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null);
         g.drawImage(paddlepic, rightPaddle.xpos, rightPaddle.ypos, rightPaddle.width, rightPaddle.height, null);
+        g.drawRect(leftPaddle.hitbox.x, leftPaddle.hitbox.y, leftPaddle.hitbox.width, leftPaddle.hitbox.height);
+        g.drawRect(rightPaddle.hitbox.x, rightPaddle.hitbox.y, rightPaddle.hitbox.width, rightPaddle.hitbox.height);
 
+        if (mainBall.isAlive == true) {
+            g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
+            g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
+        }
+        else{
+            g.drawString("GAME OVER",500,350);
+        }
 
         g.dispose();
 
@@ -138,10 +164,16 @@ public class BasicGameApp implements Runnable {
     public void run() {
         while (true) {
 
-         //   moveThings();  //move all the game objects
+            moveThings();  //move all the game objects
             render();  // paint the graphics
             pause(20); // sleep for 10 ms
         }
 
     }
+
+    public void moveThings(){
+        mainBall.move();
+    }
+
+
 }

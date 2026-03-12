@@ -5,6 +5,8 @@ public class Paddles {
 
     public int xpos;
     public int ypos;
+    public int dx;
+    public int dy;
     public int width;
     public int height;
     public boolean isAlive; //a boolean to denote if the hero is alive or dead.
@@ -16,7 +18,7 @@ public class Paddles {
         ypos = pypos;
         width =24;
         height = 133;
-        isAlive = false;
+        isAlive = true;
         hitbox = new Rectangle(xpos, ypos, width, height);
     }
 
