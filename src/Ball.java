@@ -12,6 +12,7 @@ public class Ball {
     public boolean isAlive; //a boolean to denote if the hero is alive or dead.
     public Rectangle hitbox;
 
+
     public Ball (int pxpos, int pypos){
 
         xpos = pxpos;

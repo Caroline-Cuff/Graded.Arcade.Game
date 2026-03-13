@@ -14,6 +14,7 @@
 //Graphics Libraries
 
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
 import javax.crypto.BadPaddingException;
@@ -22,20 +23,22 @@ import javax.swing.JPanel;
 import javax.tools.Tool;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
+import java.security.Key;
 
 //*******************************************************************************
 // Class Definition Section
 
 
-//todo: control paddles
-    /// right paddle
-    /// left paddle
+
+// control paddles
+    // right paddle
+    // left paddle
 //todo: make ball bounce off of paddle
     /// change dx - hitbox intersect
 // if ball goes off of y play game over screen
 
 
-public class BasicGameApp implements Runnable {
+public class BasicGameApp implements Runnable, KeyListener {
 
     //Variable Definition Section
     //Declare the variables used in the program
@@ -54,6 +57,7 @@ public class BasicGameApp implements Runnable {
     public Image backgroundpic;
     public Image paddlepic;
     public Image ballpic;
+    public int hits;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
@@ -85,6 +89,7 @@ public class BasicGameApp implements Runnable {
         leftPaddle = new Paddles(12,12);
         rightPaddle = new Paddles(965,12);
         mainBall = new Ball(500,350);
+        hits = 0;
 
         render();
 
@@ -141,7 +146,7 @@ public class BasicGameApp implements Runnable {
 
 
         //draw the image of the
-     //   g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
+        g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
         g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null);
         g.drawImage(paddlepic, rightPaddle.xpos, rightPaddle.ypos, rightPaddle.width, rightPaddle.height, null);
         g.drawRect(leftPaddle.hitbox.x, leftPaddle.hitbox.y, leftPaddle.hitbox.width, leftPaddle.hitbox.height);
@@ -167,13 +172,76 @@ public class BasicGameApp implements Runnable {
             moveThings();  //move all the game objects
             render();  // paint the graphics
             pause(20); // sleep for 10 ms
+            bounce();
         }
 
     }
 
     public void moveThings(){
         mainBall.move();
+        rightPaddle.move();
+        leftPaddle.move();
+
+    }
+
+    public void bounce(){
+        if (mainBall.hitbox.intersects(leftPaddle.hitbox)){
+            mainBall.dx = -mainBall.dx;
+            hits = hits +1;
+        }
+        if (mainBall.hitbox.intersects(rightPaddle.hitbox)){
+            mainBall.dx = -mainBall.dx;
+            hits = hits +1;
+        }
     }
 
 
-}
+        @Override
+        //not this one
+        public void keyTyped(KeyEvent e) {
+
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            // up down, left right
+            if (e.getKeyCode() == 38){
+                rightPaddle.isNorth = true;
+            }
+
+            if (e.getKeyCode() == 40){
+                rightPaddle.isSouth = true;
+            }
+            if (e.getKeyCode() == 87){
+                leftPaddle.isNorth = true;
+            }
+
+            if (e.getKeyCode() == 83){
+                leftPaddle.isSouth = true;
+            }
+
+
+
+        }
+
+        @Override
+        //not this one
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() == 38){
+                rightPaddle.isNorth = false;
+            }
+
+            if (e.getKeyCode() == 40){
+                rightPaddle.isSouth = false;
+            }
+            if (e.getKeyCode() == 87){
+                leftPaddle.isNorth = false;
+            }
+
+            if (e.getKeyCode() == 83){
+                leftPaddle.isSouth = false;
+            }
+
+
+        }
+    }
