@@ -58,12 +58,14 @@ public class BasicGameApp implements Runnable, KeyListener {
     public Image paddlepic;
     public Image ballpic;
     public int hits;
+    public Ball[] balls;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
     private Paddles leftPaddle;
     private Paddles rightPaddle;
     private Ball mainBall;
+  ///  private Ball ball2;
 
     // Main method definition
     // This is the code that runs first and automatically
@@ -80,18 +82,28 @@ public class BasicGameApp implements Runnable, KeyListener {
     // This section is the setup portion of the program
     // Initialize your variables and construct your program objects here.
     public BasicGameApp() {
+        balls = new Ball[5];
+        for (int x = 0; x< balls.length; x++) {
+            balls[x]=new Ball((int)(Math.random()*5),(int)(Math.random()*5));
+        }
+            setUpGraphics();
 
-        setUpGraphics();
-
-        backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
+        // load graphics
+       // backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
         paddlepic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
+
+        // always on
         leftPaddle = new Paddles(12,12);
         rightPaddle = new Paddles(965,12);
-        mainBall = new Ball(500,350);
+        mainBall = new Ball(5,5);
+        // changes
         hits = 0;
+        // added
+    ///    ball2 = new Ball (500,350,3,-2);
+      //  ball2.isAlive = false;
 
-        render();
+
 
     }
 
@@ -116,7 +128,7 @@ public class BasicGameApp implements Runnable, KeyListener {
         // creates a canvas which is a blank rectangular area of the screen onto which the application can draw
         // and trap input events (Mouse and Keyboard events)
         canvas = new Canvas();
-
+        // be able to react to keys
         canvas.addKeyListener(this);
 
         canvas.setBounds(0, 0, WIDTH, HEIGHT);
@@ -146,19 +158,28 @@ public class BasicGameApp implements Runnable, KeyListener {
 
 
         //draw the image of the
-        g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
+           g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
         g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null);
         g.drawImage(paddlepic, rightPaddle.xpos, rightPaddle.ypos, rightPaddle.width, rightPaddle.height, null);
         g.drawRect(leftPaddle.hitbox.x, leftPaddle.hitbox.y, leftPaddle.hitbox.width, leftPaddle.hitbox.height);
         g.drawRect(rightPaddle.hitbox.x, rightPaddle.hitbox.y, rightPaddle.hitbox.width, rightPaddle.hitbox.height);
 
-        if (mainBall.isAlive == true) {
+
+        // render mainball
+        if (mainBall.isAlive) {
             g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
             g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
         }
+
         else{
             g.drawString("GAME OVER",500,350);
         }
+      ///  if (ball2.isAlive) {
+         ///   g.drawImage(ballpic, ball2.xpos, ball2.ypos, ball2.width, ball2.height, null);
+         ///   g.drawRect(ball2.hitbox.x, ball2.hitbox.y, ball2.hitbox.width, ball2.hitbox.height);
+       /// }
+
+
 
         g.dispose();
 
@@ -169,10 +190,13 @@ public class BasicGameApp implements Runnable, KeyListener {
     public void run() {
         while (true) {
 
+            render();
             moveThings();  //move all the game objects
-            render();  // paint the graphics
             pause(20); // sleep for 10 ms
             bounce();
+
+
+
         }
 
     }
@@ -181,19 +205,43 @@ public class BasicGameApp implements Runnable, KeyListener {
         mainBall.move();
         rightPaddle.move();
         leftPaddle.move();
+    ///    ball2.move();
 
     }
 
+
+    // bounicng off walls and paddles
     public void bounce(){
         if (mainBall.hitbox.intersects(leftPaddle.hitbox)){
             mainBall.dx = -mainBall.dx;
             hits = hits +1;
+            System.out.println(hits);
+
         }
         if (mainBall.hitbox.intersects(rightPaddle.hitbox)){
             mainBall.dx = -mainBall.dx;
             hits = hits +1;
         }
-    }
+
+        if (hits >=2){
+            System.out.println("here");
+        }
+
+
+    // add another ball
+//        if (hits >= 5) {
+//            ball2.isAlive = true;
+//
+//            if (ball2.hitbox.intersects(leftPaddle.hitbox)){
+//            ball2.dx = -ball2.dx;
+//            hits = hits +1;
+//        }
+//        if (ball2.hitbox.intersects(rightPaddle.hitbox)){
+//            ball2.dx = -ball2.dx;
+//            hits = hits +1;
+//        }
+//        }
+        }
 
 
         @Override

@@ -13,12 +13,12 @@ public class Ball {
     public Rectangle hitbox;
 
 
-    public Ball (int pxpos, int pypos){
+    public Ball (int dx2, int dy2){
 
-        xpos = pxpos;
-        ypos = pypos;
-        dx = 3;
-        dy = 3;
+        xpos = 500;
+        ypos = 350;
+        dx = dx2;
+        dy = dy2;
         width =20;
         height = 20;
         isAlive = true;
@@ -26,14 +26,18 @@ public class Ball {
     }
 
     public void move(){
-            if (ypos>675) {
+
+        //bouncing
+            if (ypos>=675) {
                dy = -dy;
 
             }
-            if (ypos < 0){
+            if (ypos <= 6){
                 dy = -dy;
 
             }
+
+            // if offscreen stop
             if (xpos > 1000){
                isAlive = false;
             }

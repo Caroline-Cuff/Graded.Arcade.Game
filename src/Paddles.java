@@ -29,14 +29,24 @@ public class Paddles {
     }
 
     public void move(){
+
+        // moving
         if (isNorth == true){
-            dy = -4;
+            dy = -6;
         }
         if (isSouth == true){
-            dy = 4;
+            dy = 6;
         }
         if (isSouth == false && isNorth == false){
             dy = 0;
+        }
+
+        //wrapping
+        if (ypos > 700){
+            ypos = 0;
+        }
+        if (ypos <0){
+            ypos = 700;
         }
 
         xpos = xpos + dx;
