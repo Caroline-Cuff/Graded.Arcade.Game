@@ -59,6 +59,7 @@ public class BasicGameApp implements Runnable, KeyListener {
     public Image ballpic;
     public int hits;
     public Ball[] balls;
+    public int count;
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
@@ -83,7 +84,7 @@ public class BasicGameApp implements Runnable, KeyListener {
     // Initialize your variables and construct your program objects here.
     public BasicGameApp() {
         balls = new Ball[5];
-        for (int x = 0; x< balls.length; x++) {
+        if (count !=0 ) {
             balls[x]=new Ball((int)(Math.random()*5),(int)(Math.random()*5));
         }
             setUpGraphics();
@@ -102,6 +103,7 @@ public class BasicGameApp implements Runnable, KeyListener {
         // added
     ///    ball2 = new Ball (500,350,3,-2);
       //  ball2.isAlive = false;
+        count = 0;
 
 
 
@@ -174,6 +176,12 @@ public class BasicGameApp implements Runnable, KeyListener {
         else{
             g.drawString("GAME OVER",500,350);
         }
+
+        // render array balls
+       if (balls[count].isAlive){
+           g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
+           g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
+       }
       ///  if (ball2.isAlive) {
          ///   g.drawImage(ballpic, ball2.xpos, ball2.ypos, ball2.width, ball2.height, null);
          ///   g.drawRect(ball2.hitbox.x, ball2.hitbox.y, ball2.hitbox.width, ball2.hitbox.height);
@@ -221,11 +229,15 @@ public class BasicGameApp implements Runnable, KeyListener {
         if (mainBall.hitbox.intersects(rightPaddle.hitbox)){
             mainBall.dx = -mainBall.dx;
             hits = hits +1;
+            System.out.println(hits);
         }
 
-        if (hits >=2){
-            System.out.println("here");
-        }
+        if (hits >= 5){
+            count = count +1;
+            System.out.println("count:" + count);
+            hits = 0;
+}
+
 
 
     // add another ball
