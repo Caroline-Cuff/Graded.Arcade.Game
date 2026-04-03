@@ -66,11 +66,12 @@ public class BasicGameApp implements Runnable, KeyListener {
     private Paddles leftPaddle;
     private Paddles rightPaddle;
     private Ball mainBall;
-  ///  private Ball ball2;
+
 
     // Main method definition
     // This is the code that runs first and automatically
     public static void main(String[] args) {
+
         BasicGameApp ex = new BasicGameApp();   //creates a new instance of the game
         new Thread(ex).start();                 //creates a threads & starts up the code in the run( ) method
 
@@ -83,11 +84,15 @@ public class BasicGameApp implements Runnable, KeyListener {
     // This section is the setup portion of the program
     // Initialize your variables and construct your program objects here.
     public BasicGameApp() {
-        balls = new Ball[5];
-        if (count !=0 ) {
-            balls[x]=new Ball((int)(Math.random()*5),(int)(Math.random()*5));
-        }
+
+
             setUpGraphics();
+
+            balls = new Ball[5];
+            for (int x=0; x<balls.length; x++){
+                balls[x] = new Ball(4,2);
+            }
+        balls[count].isAlive =false;
 
         // load graphics
        // backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
@@ -100,10 +105,10 @@ public class BasicGameApp implements Runnable, KeyListener {
         mainBall = new Ball(5,5);
         // changes
         hits = 0;
-        // added
-    ///    ball2 = new Ball (500,350,3,-2);
-      //  ball2.isAlive = false;
         count = 0;
+        mainBall.isAlive = true;
+
+
 
 
 
@@ -178,17 +183,13 @@ public class BasicGameApp implements Runnable, KeyListener {
         }
 
         // render array balls
-       if (balls[count].isAlive){
+
+
+        for (int x = 0; x< balls.length; x++){
+            if (balls[x].isAlive = true){
            g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
            g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
-       }
-      ///  if (ball2.isAlive) {
-         ///   g.drawImage(ballpic, ball2.xpos, ball2.ypos, ball2.width, ball2.height, null);
-         ///   g.drawRect(ball2.hitbox.x, ball2.hitbox.y, ball2.hitbox.width, ball2.hitbox.height);
-       /// }
-
-
-
+       }}
         g.dispose();
 
         bufferStrategy.show();
@@ -198,10 +199,10 @@ public class BasicGameApp implements Runnable, KeyListener {
     public void run() {
         while (true) {
 
+            bounce();
             render();
             moveThings();  //move all the game objects
             pause(20); // sleep for 10 ms
-            bounce();
 
 
 
@@ -213,7 +214,8 @@ public class BasicGameApp implements Runnable, KeyListener {
         mainBall.move();
         rightPaddle.move();
         leftPaddle.move();
-    ///    ball2.move();
+        for(int x = 0; x< balls.length; x++){
+         balls[x].move();}
 
     }
 
@@ -240,27 +242,18 @@ public class BasicGameApp implements Runnable, KeyListener {
 
 
 
-    // add another ball
-//        if (hits >= 5) {
-//            ball2.isAlive = true;
-//
-//            if (ball2.hitbox.intersects(leftPaddle.hitbox)){
-//            ball2.dx = -ball2.dx;
-//            hits = hits +1;
-//        }
-//        if (ball2.hitbox.intersects(rightPaddle.hitbox)){
-//            ball2.dx = -ball2.dx;
-//            hits = hits +1;
-//        }
-//        }
         }
 
+
+        /// keytyped
 
         @Override
         //not this one
         public void keyTyped(KeyEvent e) {
 
         }
+
+        /// keypressed
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -283,6 +276,9 @@ public class BasicGameApp implements Runnable, KeyListener {
 
 
         }
+
+
+        /// KeyReleased
 
         @Override
         //not this one

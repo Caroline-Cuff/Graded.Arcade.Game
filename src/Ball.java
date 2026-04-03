@@ -21,7 +21,7 @@ public class Ball {
         dy = dy2;
         width =20;
         height = 20;
-        isAlive = true;
+        isAlive = false;
         hitbox = new Rectangle(xpos, ypos, width, height);
     }
 
