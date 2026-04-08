@@ -96,7 +96,7 @@ public class BasicGameApp implements Runnable, KeyListener {
 
 
         // load graphics
-        backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
+     //   backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
         paddlepic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
 
@@ -106,7 +106,7 @@ public class BasicGameApp implements Runnable, KeyListener {
         mainBall = new Ball(5,5);
         // changes
         hits = 0;
-        count = 0;
+        count = -1;
         mainBall.isAlive = true;
 
 
@@ -187,8 +187,8 @@ public class BasicGameApp implements Runnable, KeyListener {
 
 
         for (int x = 0; x< balls.length; x++){
-            if (balls[x].isAlive = true){
-           g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
+            if (balls[x].isAlive == true){
+            g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
            g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
        }}
         g.dispose();
@@ -215,8 +215,11 @@ public class BasicGameApp implements Runnable, KeyListener {
         mainBall.move();
         rightPaddle.move();
         leftPaddle.move();
-        for(int x = 0; x< balls.length; x++){
-         balls[x].move();}
+        for(int x = 0; x< balls.length; x++) {
+            if (balls[x].isAlive) {
+                balls[x].move();
+            }
+        }
 
     }
 
@@ -240,7 +243,7 @@ public class BasicGameApp implements Runnable, KeyListener {
             System.out.println("count:" + count);
             hits = 0;
 
-            for (int x =0; x<=count; x++){
+            for (int x =0; x<count; x++){
                 balls[x].isAlive = true;
             }
 }
