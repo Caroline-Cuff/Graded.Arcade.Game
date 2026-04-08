@@ -224,6 +224,7 @@ public class BasicGameApp implements Runnable, KeyListener {
     }
 
 
+
     // bounicng off walls and paddles
     public void bounce(){
         if (mainBall.hitbox.intersects(leftPaddle.hitbox)){
