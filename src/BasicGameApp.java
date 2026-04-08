@@ -88,14 +88,15 @@ public class BasicGameApp implements Runnable, KeyListener {
 
             setUpGraphics();
 
+
             balls = new Ball[5];
-            for (int x=0; x<balls.length; x++){
-                balls[x] = new Ball(4,2);
-            }
-        balls[count].isAlive =false;
+            for (int x = 0; x < balls.length; x++) {
+                balls[x] = new Ball(4, 2);
+        }
+
 
         // load graphics
-       // backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
+        backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
         paddlepic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
 
@@ -238,6 +239,10 @@ public class BasicGameApp implements Runnable, KeyListener {
             count = count +1;
             System.out.println("count:" + count);
             hits = 0;
+
+            for (int x =0; x<=count; x++){
+                balls[x].isAlive = true;
+            }
 }
 
 
