@@ -29,12 +29,12 @@ import java.security.Key;
 // Class Definition Section
 
 
-
 // control paddles
-    // right paddle
-    // left paddle
+// right paddle
+// left paddle
 //todo: make ball bounce off of paddle
-    /// change dx - hitbox intersect
+
+/// change dx - hitbox intersect
 // if ball goes off of y play game over screen
 
 
@@ -86,31 +86,28 @@ public class BasicGameApp implements Runnable, KeyListener {
     public BasicGameApp() {
 
 
-            setUpGraphics();
+        setUpGraphics();
 
 
-            balls = new Ball[5];
-            for (int x = 0; x < balls.length; x++) {
-                balls[x] = new Ball(4, 2);
+        balls = new Ball[5];
+        for (int x = 0; x < balls.length; x++) {
+            balls[x] = new Ball(4, 2);
         }
 
 
         // load graphics
-     //   backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
+        //   backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
         paddlepic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
 
         // always on
-        leftPaddle = new Paddles(12,12);
-        rightPaddle = new Paddles(965,12);
-        mainBall = new Ball(5,5);
+        leftPaddle = new Paddles(12, 12);
+        rightPaddle = new Paddles(965, 12);
+        mainBall = new Ball(5, 5);
         // changes
         hits = 0;
         count = -1;
         mainBall.isAlive = true;
-
-
-
 
 
     }
@@ -166,7 +163,7 @@ public class BasicGameApp implements Runnable, KeyListener {
 
 
         //draw the image of the
-           g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
+        g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
         g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null);
         g.drawImage(paddlepic, rightPaddle.xpos, rightPaddle.ypos, rightPaddle.width, rightPaddle.height, null);
         g.drawRect(leftPaddle.hitbox.x, leftPaddle.hitbox.y, leftPaddle.hitbox.width, leftPaddle.hitbox.height);
@@ -177,20 +174,19 @@ public class BasicGameApp implements Runnable, KeyListener {
         if (mainBall.isAlive) {
             g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
             g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
-        }
-
-        else{
-            g.drawString("GAME OVER",500,350);
+        } else {
+            g.drawString("GAME OVER", 500, 350);
         }
 
         // render array balls
 
 
-        for (int x = 0; x< balls.length; x++){
-            if (balls[x].isAlive == true){
-            g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
-           g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
-       }}
+        for (int x = 0; x < balls.length; x++) {
+            if (balls[x].isAlive) {
+                g.drawImage(ballpic, balls[x].xpos, balls[x].ypos, balls[x].width, balls[x].height, null);
+                g.drawRect(balls[x].hitbox.x, balls[x].hitbox.y, balls[x].hitbox.width, balls[x].hitbox.height);
+            }
+        }
         g.dispose();
 
         bufferStrategy.show();
@@ -206,16 +202,15 @@ public class BasicGameApp implements Runnable, KeyListener {
             pause(20); // sleep for 10 ms
 
 
-
         }
 
     }
 
-    public void moveThings(){
+    public void moveThings() {
         mainBall.move();
         rightPaddle.move();
         leftPaddle.move();
-        for(int x = 0; x< balls.length; x++) {
+        for (int x = 0; x < balls.length; x++) {
             if (balls[x].isAlive) {
                 balls[x].move();
             }
@@ -224,89 +219,86 @@ public class BasicGameApp implements Runnable, KeyListener {
     }
 
 
-
     // bounicng off walls and paddles
-    public void bounce(){
-        if (mainBall.hitbox.intersects(leftPaddle.hitbox)){
+    public void bounce() {
+        if (mainBall.hitbox.intersects(leftPaddle.hitbox)) {
             mainBall.dx = -mainBall.dx;
-            hits = hits +1;
+            hits = hits + 1;
             System.out.println(hits);
 
         }
-        if (mainBall.hitbox.intersects(rightPaddle.hitbox)){
+        if (mainBall.hitbox.intersects(rightPaddle.hitbox)) {
             mainBall.dx = -mainBall.dx;
-            hits = hits +1;
+            hits = hits + 1;
             System.out.println(hits);
         }
 
-        if (hits >= 5){
-            count = count +1;
+        if (hits >= 5) {
+            count = count + 1;
             System.out.println("count:" + count);
             hits = 0;
 
-            for (int x =0; x<count; x++){
+            for (int x = 0; x < balls.length; x++) {
                 balls[x].isAlive = true;
             }
-}
-
-
-
         }
 
 
-        /// keytyped
-
-        @Override
-        //not this one
-        public void keyTyped(KeyEvent e) {
-
-        }
-
-        /// keypressed
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-            // up down, left right
-            if (e.getKeyCode() == 38){
-                rightPaddle.isNorth = true;
-            }
-
-            if (e.getKeyCode() == 40){
-                rightPaddle.isSouth = true;
-            }
-            if (e.getKeyCode() == 87){
-                leftPaddle.isNorth = true;
-            }
-
-            if (e.getKeyCode() == 83){
-                leftPaddle.isSouth = true;
-            }
-
-
-
-        }
-
-
-        /// KeyReleased
-
-        @Override
-        //not this one
-        public void keyReleased(KeyEvent e) {
-            if (e.getKeyCode() == 38){
-                rightPaddle.isNorth = false;
-            }
-
-            if (e.getKeyCode() == 40){
-                rightPaddle.isSouth = false;
-            }
-            if (e.getKeyCode() == 87){
-                leftPaddle.isNorth = false;
-            }
-
-            if (e.getKeyCode() == 83){
-                leftPaddle.isSouth = false;
-            }
-
-
-        }
     }
+
+
+    /// keytyped
+
+    @Override
+    //not this one
+    public void keyTyped(KeyEvent e) {
+
+    }
+
+    /// keypressed
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // up down, left right
+        if (e.getKeyCode() == 38) {
+            rightPaddle.isNorth = true;
+        }
+
+        if (e.getKeyCode() == 40) {
+            rightPaddle.isSouth = true;
+        }
+        if (e.getKeyCode() == 87) {
+            leftPaddle.isNorth = true;
+        }
+
+        if (e.getKeyCode() == 83) {
+            leftPaddle.isSouth = true;
+        }
+
+
+    }
+
+
+    /// KeyReleased
+
+    @Override
+    //not this one
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == 38) {
+            rightPaddle.isNorth = false;
+        }
+
+        if (e.getKeyCode() == 40) {
+            rightPaddle.isSouth = false;
+        }
+        if (e.getKeyCode() == 87) {
+            leftPaddle.isNorth = false;
+        }
+
+        if (e.getKeyCode() == 83) {
+            leftPaddle.isSouth = false;
+        }
+
+
+    }
+}
