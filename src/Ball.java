@@ -11,6 +11,7 @@ public class Ball {
     public int height;
     public boolean isAlive; //a boolean to denote if the hero is alive or dead.
     public Rectangle hitbox;
+    public boolean isOffscreen;
 
 
     public Ball (int dx2, int dy2){
@@ -23,6 +24,7 @@ public class Ball {
         height = 20;
         isAlive = false;
         hitbox = new Rectangle(xpos, ypos, width, height);
+        isOffscreen = false;
     }
 
     public void move(){
@@ -40,9 +42,12 @@ public class Ball {
             // if offscreen stop
             if (xpos > 1000){
                isAlive = false;
+               isOffscreen = true;
+
             }
             if (xpos < 0){
                isAlive= false;
+               isOffscreen = true;
             }
             xpos = xpos + dx;
             ypos = ypos + dy;

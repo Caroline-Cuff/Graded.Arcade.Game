@@ -15,6 +15,7 @@
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.awt.*;
 import javax.crypto.BadPaddingException;
@@ -38,7 +39,7 @@ import java.security.Key;
 // if ball goes off of y play game over screen
 
 
-public class BasicGameApp implements Runnable, KeyListener {
+public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     //Variable Definition Section
     //Declare the variables used in the program
@@ -60,6 +61,9 @@ public class BasicGameApp implements Runnable, KeyListener {
     public int hits;
     public Ball[] balls;
     public int count;
+    public boolean startScreen;
+    public Rectangle startHitbox;
+
 
     //Declare the objects used in the program
     //These are things that are made up of more than one variable type
@@ -96,7 +100,7 @@ public class BasicGameApp implements Runnable, KeyListener {
 
 
         // load graphics
-        //   backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
+        backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
         paddlepic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
 
@@ -108,6 +112,8 @@ public class BasicGameApp implements Runnable, KeyListener {
         hits = 0;
         count = -1;
         mainBall.isAlive = true;
+        startScreen = true;
+        startHitbox = new Rectangle(450, 250, 100, 100);
 
 
     }
@@ -135,6 +141,9 @@ public class BasicGameApp implements Runnable, KeyListener {
         canvas = new Canvas();
         // be able to react to keys
         canvas.addKeyListener(this);
+        canvas.addMouseListener(this);
+
+
 
         canvas.setBounds(0, 0, WIDTH, HEIGHT);
         canvas.setIgnoreRepaint(true);
@@ -161,31 +170,44 @@ public class BasicGameApp implements Runnable, KeyListener {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-
-        //draw the image of the
-        g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
-        g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null);
-        g.drawImage(paddlepic, rightPaddle.xpos, rightPaddle.ypos, rightPaddle.width, rightPaddle.height, null);
-        g.drawRect(leftPaddle.hitbox.x, leftPaddle.hitbox.y, leftPaddle.hitbox.width, leftPaddle.hitbox.height);
-        g.drawRect(rightPaddle.hitbox.x, rightPaddle.hitbox.y, rightPaddle.hitbox.width, rightPaddle.hitbox.height);
-
-
-        // render mainball
-        if (mainBall.isAlive) {
-            g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
-            g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
-        } else {
-            g.drawString("GAME OVER", 500, 350);
-        }
-
-        // render array balls
+        if (!startScreen) {
+            //draw the image of the
+            g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
+            g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null);
+            g.drawImage(paddlepic, rightPaddle.xpos, rightPaddle.ypos, rightPaddle.width, rightPaddle.height, null);
+            g.drawRect(leftPaddle.hitbox.x, leftPaddle.hitbox.y, leftPaddle.hitbox.width, leftPaddle.hitbox.height);
+            g.drawRect(rightPaddle.hitbox.x, rightPaddle.hitbox.y, rightPaddle.hitbox.width, rightPaddle.hitbox.height);
 
 
-        for (int x = 0; x < balls.length; x++) {
-            if (balls[x].isAlive) {
-                g.drawImage(ballpic, balls[x].xpos, balls[x].ypos, balls[x].width, balls[x].height, null);
-                g.drawRect(balls[x].hitbox.x, balls[x].hitbox.y, balls[x].hitbox.width, balls[x].hitbox.height);
+            // render mainball
+            for (int z = 0; z < balls.length; z++) {
+                if (!mainBall.isOffscreen && !balls[z].isOffscreen) {
+                    g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
+                    g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
+                } else {
+                    g.setColor(Color.WHITE);
+                    g.drawString("GAME OVER", 500, 350);
+                    pause(50);
+
+                    startScreen = true;
+                }
             }
+
+            // render array balls
+
+
+            for (int x = 0; x < balls.length; x++) {
+                if (balls[x].isAlive) {
+                    g.drawImage(ballpic, balls[x].xpos, balls[x].ypos, balls[x].width, balls[x].height, null);
+                    g.drawRect(balls[x].hitbox.x, balls[x].hitbox.y, balls[x].hitbox.width, balls[x].hitbox.height);
+                }
+            }
+        }
+        else {
+            g.setColor(Color.BLUE);
+            g.fillRect(450, 250, 100, 100);
+            g.drawRect(startHitbox.x,startHitbox.y, startHitbox.width, startHitbox.height);
+            g.drawString("Start", 500, 350);
         }
         g.dispose();
 
@@ -198,7 +220,8 @@ public class BasicGameApp implements Runnable, KeyListener {
 
             bounce();
             render();
-            moveThings();  //move all the game objects
+            if (!startScreen){
+            moveThings(); } //move all the game objects
             pause(20); // sleep for 10 ms
 
 
@@ -242,7 +265,17 @@ public class BasicGameApp implements Runnable, KeyListener {
                 balls[x].isAlive = true;
             }
         }
+        for (int d = 0; d < balls.length; d++) {
+            if (balls[d].hitbox.intersects(leftPaddle.hitbox)) {
+                balls[d].dx = -balls[d].dx;
 
+
+            }
+            if (balls[d].hitbox.intersects(rightPaddle.hitbox)) {
+                balls[d].dx = -balls[d].dx;
+                System.out.println(hits);
+            }
+        }
 
     }
 
@@ -299,6 +332,37 @@ public class BasicGameApp implements Runnable, KeyListener {
             leftPaddle.isSouth = false;
         }
 
+
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        Rectangle pointHitbox = new Rectangle(e.getX(), e.getY(), 1, 1);
+        System.out.println("mouse pressed");
+        if (startHitbox.intersects(pointHitbox)) {
+            System.out.println("Start");
+            startScreen = false;
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }
