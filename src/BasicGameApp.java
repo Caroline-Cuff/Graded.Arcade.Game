@@ -62,7 +62,11 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Ball[] balls;
     public int count;
     public boolean startScreen;
+    public boolean endScreen;
     public Rectangle startHitbox;
+    public Rectangle endHitbox;
+    public boolean restart;
+    public Font font;
 
 
     //Declare the objects used in the program
@@ -113,8 +117,11 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         count = -1;
         mainBall.isAlive = true;
         startScreen = true;
+        endScreen = false;
         startHitbox = new Rectangle(450, 250, 100, 100);
-
+        endHitbox = new Rectangle(450,250,100,100);
+        restart = true;
+        font = new Font("Serif", Font.PLAIN,30);
 
     }
 
@@ -170,7 +177,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        if (!startScreen) {
+        if (!startScreen&&!endScreen) {
             //draw the image of the
             g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null);
             g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null);
@@ -189,7 +196,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                     g.drawString("GAME OVER", 500, 350);
                     pause(50);
 
-                    startScreen = true;
+                    endScreen = true;
                 }
             }
 
@@ -203,11 +210,23 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 }
             }
         }
-        else {
-            g.setColor(Color.BLUE);
+        else if (startScreen){
+            g.setColor(Color.GREEN);
             g.fillRect(450, 250, 100, 100);
             g.drawRect(startHitbox.x,startHitbox.y, startHitbox.width, startHitbox.height);
-            g.drawString("Start", 500, 350);
+            g.setColor(Color.BLACK);
+            g.setFont(font);
+            g.drawString("START", 453, 310);
+        }
+
+        else if (endScreen = true){
+            g.setColor(Color.RED);
+            g.setFont(font);
+            g.drawString("YOU LOSE. PLAY AGAIN?",325,200);
+            g.setColor(Color.GREEN);
+            g.drawRect(endHitbox.x,endHitbox.y, endHitbox.width, endHitbox.height);
+            g.fillRect(endHitbox.x,endHitbox.y, endHitbox.width, endHitbox.height);
+
         }
         g.dispose();
 
@@ -220,7 +239,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
             bounce();
             render();
-            if (!startScreen){
+            if (!startScreen&&!endScreen){
             moveThings(); } //move all the game objects
             pause(20); // sleep for 10 ms
 
@@ -347,6 +366,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         if (startHitbox.intersects(pointHitbox)) {
             System.out.println("Start");
             startScreen = false;
+            endScreen = false;
         }
     }
 
