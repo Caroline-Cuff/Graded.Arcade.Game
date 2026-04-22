@@ -13,12 +13,14 @@ public class Paddles {
     public Rectangle hitbox;
     public boolean isNorth;
     public boolean isSouth;
+    public int startypos;
 
 
-    public Paddles (int pxpos, int pypos){
+    public Paddles (int pxpos, int pypos, int sypos){
 
         xpos = pxpos;
         ypos = pypos;
+        startypos = sypos;
         width =24;
         height = 133;
         isAlive = true;

@@ -67,6 +67,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Rectangle endHitbox;
     public boolean restart;
     public Font font;
+    public boolean playing;
 
 
     //Declare the objects used in the program
@@ -109,8 +110,9 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
 
         // always on
-        leftPaddle = new Paddles(12, 12);
-        rightPaddle = new Paddles(965, 12);
+
+        leftPaddle = new Paddles(12, 12,12);
+        rightPaddle = new Paddles(965,12,956);
         mainBall = new Ball(5, 5);
         // changes
         hits = 0;
@@ -120,7 +122,6 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         endScreen = false;
         startHitbox = new Rectangle(450, 250, 100, 100);
         endHitbox = new Rectangle(450,250,100,100);
-        restart = true;
         font = new Font("Serif", Font.PLAIN,30);
 
     }
@@ -177,13 +178,16 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        if (!startScreen&&!endScreen) {
+        if (!startScreen&&!endScreen&&!restart) {
             //draw the image of the
             g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null); // background
             g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null); // left paddle
             g.drawImage(paddlepic, rightPaddle.xpos, rightPaddle.ypos, rightPaddle.width, rightPaddle.height, null); // right paddle
             g.drawRect(leftPaddle.hitbox.x, leftPaddle.hitbox.y, leftPaddle.hitbox.width, leftPaddle.hitbox.height); // left hitbox
             g.drawRect(rightPaddle.hitbox.x, rightPaddle.hitbox.y, rightPaddle.hitbox.width, rightPaddle.hitbox.height); // right hitbox
+            startHitbox.x = -5000;
+            startHitbox.y = 10000;
+
 
 
             // render mainball
@@ -220,7 +224,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         }
 
         // end
-        else if (endScreen = true){
+        else if (endScreen){
             g.setColor(Color.RED);
             g.setFont(font);
             g.drawString("YOU LOSE. PLAY AGAIN?",325,200);
@@ -228,7 +232,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.drawRect(endHitbox.x,endHitbox.y, endHitbox.width, endHitbox.height);
             g.fillRect(endHitbox.x,endHitbox.y, endHitbox.width, endHitbox.height);
 
+
         }
+
+
         g.dispose();
 
         bufferStrategy.show();
@@ -240,7 +247,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 // call methods
             bounce();
             render();
-            if (!startScreen&&!endScreen){
+            if (!startScreen&&!endScreen&&!restart){
             moveThings(); } //move all the game objects
             pause(20); // sleep for 10 ms
 
@@ -257,9 +264,29 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         for (int x = 0; x < balls.length; x++) {
             if (balls[x].isAlive) {
                 balls[x].move();
+
             }
         }
 
+    }
+    public void restart(){
+        if (restart = true){
+            mainBall.xpos = 500;
+            mainBall.ypos = 350;
+            mainBall.dx = 5;
+            mainBall.dy = 5;
+            hits = 0;
+            count = -1;
+            mainBall.isAlive = true;
+            for (int x = 0; x< balls.length; x++){
+                balls[x].isAlive = false;
+                balls[x].xpos = 500;
+                balls[x].ypos = 350;
+
+
+            }
+        restart = false;
+        }
     }
 
 
@@ -375,6 +402,20 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             startScreen = false;
             endScreen = false;
         }
+        if (endHitbox.intersects(pointHitbox)){
+            restart = true;
+            restart();
+            endScreen = false;
+            startScreen = false;
+            System.out.println(mainBall.xpos+mainBall.ypos);
+            render();
+//            endScreen = false;
+//            startScreen = false;
+//            System.out.println("Restart");
+//            restart = false;
+
+
+        }
     }
 
     @Override
@@ -393,3 +434,4 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     }
 }
+

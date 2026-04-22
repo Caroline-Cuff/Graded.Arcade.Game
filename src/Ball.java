@@ -12,12 +12,16 @@ public class Ball {
     public boolean isAlive; //a boolean to denote if the hero is alive or dead.
     public Rectangle hitbox;
     public boolean isOffscreen;
+    public int startxpos;
+    public int startypos;
 
 
     public Ball (int dx2, int dy2){
 
         xpos = 500;
         ypos = 350;
+        startxpos = xpos;
+        startypos = ypos;
         dx = dx2;
         dy = dy2;
         width =20;
