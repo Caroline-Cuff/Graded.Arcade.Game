@@ -283,9 +283,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 balls[x].xpos = 500;
                 balls[x].ypos = 350;
 
-
             }
         restart = false;
+        endScreen = false;
+        startScreen = false;
         }
     }
 
