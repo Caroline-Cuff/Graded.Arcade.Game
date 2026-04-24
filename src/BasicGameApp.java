@@ -178,7 +178,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        if (!startScreen&&!endScreen&&!restart) {
+        System.out.println("start"+startScreen);
+
+        System.out.println("end"+endScreen);
+
+        System.out.println("restart"+restart);
+        if (!startScreen&!endScreen&!restart) {
             //draw the image of the
             g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null); // background
             g.drawImage(paddlepic, leftPaddle.xpos, leftPaddle.ypos, leftPaddle.width, leftPaddle.height, null); // left paddle
@@ -200,6 +205,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                     g.setColor(Color.WHITE);
                     g.drawString("GAME OVER", 500, 350);
                     pause(50);
+                    System.out.println("end scene");
 
                     endScreen = true;
                 }
@@ -270,7 +276,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
     }
     public void restart(){
-        if (restart = true){
+        if (restart == true){
             mainBall.xpos = 500;
             mainBall.ypos = 350;
             mainBall.dx = 5;
@@ -282,6 +288,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 balls[x].isAlive = false;
                 balls[x].xpos = 500;
                 balls[x].ypos = 350;
+                System.out.println(x + ":" + balls[x].xpos + ": "+ balls[x].ypos);
 
             }
         restart = false;
@@ -408,8 +415,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             restart();
             endScreen = false;
             startScreen = false;
-            System.out.println(mainBall.xpos+mainBall.ypos);
-            render();
+            System.out.println(mainBall.xpos+"," +mainBall.ypos);
+            System.out.println("click");
 //            endScreen = false;
 //            startScreen = false;
 //            System.out.println("Restart");
