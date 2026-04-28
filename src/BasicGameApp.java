@@ -198,7 +198,10 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             // render mainball
             // if ofscreen - end game
             for (int z = 0; z < balls.length; z++) {
-                if (!mainBall.isOffscreen && !balls[z].isOffscreen) {
+                System.out.println("mainball" + mainBall.isOffscreen);
+                    System.out.println("ball" + z + balls[z].isOffscreen);
+                if (// if mainBall is onscreen & balls is onscreen - render
+                 !mainBall.isOffscreen && !balls[z].isOffscreen) {
                     g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
                     g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
                 } else {
@@ -206,7 +209,6 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                     g.drawString("GAME OVER", 500, 350);
                     pause(50);
                     System.out.println("end scene");
-
                     endScreen = true;
                 }
             }
@@ -277,6 +279,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     }
     public void restart(){
         if (restart == true){
+            System.out.println("restart"+restart);
             mainBall.xpos = 500;
             mainBall.ypos = 350;
             mainBall.dx = 5;
@@ -284,12 +287,12 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             hits = 0;
             count = -1;
             mainBall.isAlive = true;
+            mainBall.isOffscreen = false;
             for (int x = 0; x< balls.length; x++){
                 balls[x].isAlive = false;
                 balls[x].xpos = 500;
                 balls[x].ypos = 350;
                 System.out.println(x + ":" + balls[x].xpos + ": "+ balls[x].ypos);
-
             }
         restart = false;
         endScreen = false;
