@@ -1,0 +1,61 @@
+import java.awt.*;
+
+public class Fireball {
+
+    public int xpos;
+    public int ypos;
+    public int dx;
+    public int dy;
+    public int width;
+    public int height;
+    public boolean isAlive; //a boolean to denote if the hero is alive or dead.
+    public Rectangle hitbox;
+    public boolean isOffscreen;
+
+
+
+    public Fireball (int dx2, int dy2){
+
+        xpos = 0;
+        ypos = 0;
+        dx = dx2;
+        dy = dy2;
+        width =10;
+        height = 10;
+        isAlive = false;
+        hitbox = new Rectangle(xpos, ypos, width, height);
+        isOffscreen = false;
+    }
+
+
+
+    public void move(){
+
+        //bouncing
+        if (ypos>=675) {
+            dy = 0;
+            dx = 0;
+
+        }
+        if (ypos <= 6){
+            dy = 0;
+            dx = 0;
+
+        }
+
+        // if offscreen stop
+        if (xpos > 1000){
+            isAlive = false;
+            isOffscreen = true;
+
+        }
+        if (xpos < 0){
+            isAlive= false;
+            isOffscreen = true;
+        }
+        xpos = xpos + dx;
+        ypos = ypos + dy;
+
+        hitbox = new Rectangle(xpos,ypos, width, height);
+    }
+}

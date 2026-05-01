@@ -1,18 +1,3 @@
-//Basic Game Application
-//Version 2
-// Basic Object, Image, Movement
-// Astronaut moves to the right.
-// Threaded
-
-//K. Chun 8/2018
-
-//*******************************************************************************
-//Import Section
-//Add Java libraries needed for the game
-//import java.awt.Canvas;
-
-//Graphics Libraries
-
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseListener;
@@ -67,7 +52,9 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     public Rectangle endHitbox;
     public boolean restart;
     public Font font;
-    public boolean playing;
+    public int firecount;
+    public Image fireballpic;
+
 
 
     //Declare the objects used in the program
@@ -75,6 +62,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     private Paddles leftPaddle;
     private Paddles rightPaddle;
     private Ball mainBall;
+    private Fireball fireball;
 
 
     // Main method definition
@@ -108,12 +96,14 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         backgroundpic = Toolkit.getDefaultToolkit().getImage("backgroundpic.jpg");
         paddlepic = Toolkit.getDefaultToolkit().getImage("paddle.png");
         ballpic = Toolkit.getDefaultToolkit().getImage("ball.png");
+        fireballpic = Toolkit.getDefaultToolkit().getImage("fireball_real.png");
 
         // always on
 
         leftPaddle = new Paddles(12, 12,12);
         rightPaddle = new Paddles(965,12,956);
         mainBall = new Ball(5, 5);
+        fireball = new Fireball(4,4);
         // changes
         hits = 0;
         count = -1;
@@ -123,6 +113,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         startHitbox = new Rectangle(450, 250, 100, 100);
         endHitbox = new Rectangle(450,250,100,100);
         font = new Font("Serif", Font.PLAIN,30);
+        firecount = 0;
 
     }
 
@@ -178,11 +169,11 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         Graphics2D g = (Graphics2D) bufferStrategy.getDrawGraphics();
         g.clearRect(0, 0, WIDTH, HEIGHT);
 
-        System.out.println("start"+startScreen);
+    //    System.out.println("start"+startScreen);
 
-        System.out.println("end"+endScreen);
+      //  System.out.println("end"+endScreen);
 
-        System.out.println("restart"+restart);
+     //   System.out.println("restart"+restart);
         if (!startScreen&!endScreen&!restart) {
             //draw the image of the
             g.drawImage(backgroundpic, 0, 0, WIDTH, HEIGHT, null); // background
@@ -194,14 +185,13 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             startHitbox.y = 10000;
 
 
-
             // render mainball
             // if ofscreen - end game
             for (int z = 0; z < balls.length; z++) {
-                System.out.println("mainball" + mainBall.isOffscreen);
-                    System.out.println("ball" + z + balls[z].isOffscreen);
+              //  System.out.println("mainball" + mainBall.isOffscreen);
+                System.out.println("ball" + z + balls[z].isOffscreen);
                 if (// if mainBall is onscreen & balls is onscreen - render
-                 !mainBall.isOffscreen && !balls[z].isOffscreen) {
+                        !mainBall.isOffscreen && !balls[z].isOffscreen) {
                     g.drawImage(ballpic, mainBall.xpos, mainBall.ypos, mainBall.width, mainBall.height, null);
                     g.drawRect(mainBall.hitbox.x, mainBall.hitbox.y, mainBall.hitbox.width, mainBall.hitbox.height);
                 } else {
@@ -216,11 +206,18 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             // render array balls
             for (int x = 0; x < balls.length; x++) {
                 if (balls[x].isAlive) {
+                    balls[x].isOffscreen = false;
                     g.drawImage(ballpic, balls[x].xpos, balls[x].ypos, balls[x].width, balls[x].height, null);
                     g.drawRect(balls[x].hitbox.x, balls[x].hitbox.y, balls[x].hitbox.width, balls[x].hitbox.height);
                 }
             }
-        }
+
+            firecount = firecount + 1;
+            if (firecount == 1000){
+            g.drawImage(fireballpic, fireball.xpos,fireball.ypos,fireball.width, fireball.height, null);
+            fireball.move();
+            firecount = 0;
+        }}
         // start
         else if (startScreen){
             g.setColor(Color.GREEN);
@@ -256,7 +253,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             bounce();
             render();
             if (!startScreen&&!endScreen&&!restart){
-            moveThings(); } //move all the game objects
+                moveThings(); } //move all the game objects
             pause(20); // sleep for 10 ms
 
 
@@ -279,7 +276,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
     }
     public void restart(){
         if (restart == true){
-            System.out.println("restart"+restart);
+          //  System.out.println("restart"+restart);
             mainBall.xpos = 500;
             mainBall.ypos = 350;
             mainBall.dx = 5;
@@ -294,9 +291,9 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 balls[x].ypos = 350;
                 System.out.println(x + ":" + balls[x].xpos + ": "+ balls[x].ypos);
             }
-        restart = false;
-        endScreen = false;
-        startScreen = false;
+            restart = false;
+            endScreen = false;
+            startScreen = false;
         }
     }
 
