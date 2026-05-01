@@ -103,7 +103,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
         leftPaddle = new Paddles(12, 12,12);
         rightPaddle = new Paddles(965,12,956);
         mainBall = new Ball(5, 5);
-        fireball = new Fireball(4,4);
+        fireball = new Fireball(4,3);
         // changes
         hits = 0;
         count = -1;
@@ -183,12 +183,14 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             g.drawRect(rightPaddle.hitbox.x, rightPaddle.hitbox.y, rightPaddle.hitbox.width, rightPaddle.hitbox.height); // right hitbox
             startHitbox.x = -5000;
             startHitbox.y = 10000;
+            g.drawImage(fireballpic,fireball.xpos,fireball.ypos, fireball.width, fireball.height, null);
+            g.drawRect(fireball.hitbox.x, fireball.hitbox.y, fireball.hitbox.width, fireball.hitbox.height); // left hitbox
 
 
             // render mainball
             // if ofscreen - end game
             for (int z = 0; z < balls.length; z++) {
-              //  System.out.println("mainball" + mainBall.isOffscreen);
+                //  System.out.println("mainball" + mainBall.isOffscreen);
                 System.out.println("ball" + z + balls[z].isOffscreen);
                 if (// if mainBall is onscreen & balls is onscreen - render
                         !mainBall.isOffscreen && !balls[z].isOffscreen) {
@@ -212,12 +214,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 }
             }
 
-            firecount = firecount + 1;
-            if (firecount == 1000){
-            g.drawImage(fireballpic, fireball.xpos,fireball.ypos,fireball.width, fireball.height, null);
-            fireball.move();
-            firecount = 0;
-        }}
+        }
         // start
         else if (startScreen){
             g.setColor(Color.GREEN);
@@ -272,6 +269,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
 
             }
         }
+        fireball.move();
 
     }
     public void restart(){
@@ -294,6 +292,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             restart = false;
             endScreen = false;
             startScreen = false;
+            fireball.ypos = -10;
+            fireball.xpos = -10;
         }
     }
 
@@ -335,6 +335,18 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
                 balls[d].dx = -balls[d].dx;
                 System.out.println(hits);
             }
+        }
+
+        if (fireball.hitbox.intersects(rightPaddle.hitbox)){
+            rightPaddle.dy = rightPaddle.dy *2;
+
+            rightPaddle.dy = rightPaddle.dy / 2;
+        }
+
+        if (fireball.hitbox.intersects(leftPaddle.hitbox)){
+            leftPaddle.dy = leftPaddle.dy*2;
+
+            leftPaddle.dy = leftPaddle.dy /2;
         }
 
     }
@@ -410,6 +422,8 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             startScreen = false;
             endScreen = false;
         }
+
+        // restart hitbox
         if (endHitbox.intersects(pointHitbox)){
             restart = true;
             restart();
@@ -417,6 +431,7 @@ public class BasicGameApp implements Runnable, KeyListener, MouseListener {
             startScreen = false;
             System.out.println(mainBall.xpos+"," +mainBall.ypos);
             System.out.println("click");
+            //using souts to tell what is happening in code
 //            endScreen = false;
 //            startScreen = false;
 //            System.out.println("Restart");

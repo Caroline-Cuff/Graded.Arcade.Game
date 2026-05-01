@@ -16,12 +16,12 @@ public class Fireball {
 
     public Fireball (int dx2, int dy2){
 
-        xpos = 0;
-        ypos = 0;
+        xpos = -10;
+        ypos = -10;
         dx = dx2;
         dy = dy2;
-        width =10;
-        height = 10;
+        width =25;
+        height = 25;
         isAlive = false;
         hitbox = new Rectangle(xpos, ypos, width, height);
         isOffscreen = false;
@@ -32,26 +32,32 @@ public class Fireball {
     public void move(){
 
         //bouncing
-        if (ypos>=675) {
-            dy = 0;
-            dx = 0;
+        if (ypos>=750) {
+            ypos = (int)(Math.random()*750);
+            xpos = (int)(Math.random()*1100);
 
         }
-        if (ypos <= 6){
-            dy = 0;
-            dx = 0;
-
+        if (ypos <= -50){
+            ypos = (int)(Math.random()*750);
+            xpos = (int)(Math.random()*1100);
+            dx = -dx;
+            dy = -dy;
         }
 
         // if offscreen stop
         if (xpos > 1000){
-            isAlive = false;
-            isOffscreen = true;
+            ypos = (int)(Math.random()*750);
+            xpos = (int)(Math.random()*1100);
+            dx = -dx;
+            dy = -dy;
 
         }
         if (xpos < 0){
-            isAlive= false;
-            isOffscreen = true;
+            ypos = (int)(Math.random()*750);
+            xpos = (int)(Math.random()*1100);
+            dx = -dx;
+            dy = -dy;
+
         }
         xpos = xpos + dx;
         ypos = ypos + dy;
